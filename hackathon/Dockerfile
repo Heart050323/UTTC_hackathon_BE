@@ -4,4 +4,4 @@ COPY . .
 RUN go mod download
 RUN go build -v main.go
 EXPOSE 8080
-CMD ["./main"]
+CMD ["go", "run", "main.go"]
