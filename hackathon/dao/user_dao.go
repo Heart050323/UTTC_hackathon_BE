@@ -29,7 +29,10 @@ func CloseDBWithSysCall() {
 var DB *sql.DB
 
 func init() {
-	// ①-1
+	// err := godotenv.Load(".env")
+	// if err != nil {
+	// 	log.Fatalf("No .env file, %v\n", err)
+	// }
 	mysqlUser := os.Getenv("MYSQL_USER")
 	mysqlUserPwd := os.Getenv("MYSQL_PASSWORD")
 	mysqlHost := os.Getenv("MYSQL_HOST")
