@@ -12,7 +12,7 @@ func main() {
 	http.HandleFunc("/user", controller.Handler)
 	// ③ Ctrl+CでHTTPサーバー停止時にDBをクローズする
 	dao.CloseDBWithSysCall()
-
+	//  コミットする用
 	// 8000番ポートでリクエストを待ち受ける
 	log.Println("Listening...")
 	if err := http.ListenAndServe(":8080", nil); err != nil {
