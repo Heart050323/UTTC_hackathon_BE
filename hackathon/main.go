@@ -27,6 +27,13 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		default:
 			http.Error(w, "許可されていないメソッド", http.StatusMethodNotAllowed)
 		}
+	case "/register":
+		switch r.Method {
+		case http.MethodPost:
+			controller.UserRegister(w, r)
+		default:
+			http.Error(w, "許可されていないメソッド", http.StatusMethodNotAllowed)
+		}
 	default:
 		http.Error(w, "無効なエンドポイント", http.StatusNotFound)
 	}
