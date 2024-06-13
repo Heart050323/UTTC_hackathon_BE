@@ -9,7 +9,6 @@ import (
 	"syscall"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/joho/godotenv"
 )
 
 func CloseDBWithSysCall() {
@@ -30,10 +29,10 @@ func CloseDBWithSysCall() {
 var db *sql.DB
 
 func init() {
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatalf("No .env file, %v\n", err)
-	}
+	// err := godotenv.Load(".env")
+	// if err != nil {
+	// 	log.Fatalf("No .env file, %v\n", err)
+	// }
 	mysqlUser := os.Getenv("MYSQL_USER")
 	mysqlUserPwd := os.Getenv("MYSQL_PASSWORD")
 	mysqlHost := os.Getenv("MYSQL_HOST")
