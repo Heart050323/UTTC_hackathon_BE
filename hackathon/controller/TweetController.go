@@ -11,7 +11,7 @@ func HandlePost(w http.ResponseWriter, r *http.Request) {
 	var PostTweet model.PostTweet
 	err := json.NewDecoder(r.Body).Decode(&PostTweet)
 	if err != nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		http.Error(w, "Invalid request body in Post", http.StatusBadRequest)
 		return
 	}
 	if len(PostTweet.Content) > 140 {

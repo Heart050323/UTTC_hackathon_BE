@@ -49,6 +49,7 @@ func init() {
 		log.Fatalf("fail: _db.Ping, %v\n", err)
 	}
 	db = _db
+	log.Println("DBが開かれました")
 }
 func PostTweet(sender_user_id int, content string, replied_tweet_id int, re_tweet_id int) error {
 	tx, err := db.Begin()
