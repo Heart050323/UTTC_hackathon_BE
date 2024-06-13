@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"hackathon/model"
 	"hackathon/usecase"
+	"log"
 	"net/http"
 )
 
@@ -20,10 +21,13 @@ func HandleAuth(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "failed to Auth", http.StatusInternalServerError)
 		return
 	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Auth successfully"))
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(userInfo)
+	w.WriteHeader(http.StatusOK)
+	log.Println("Auth successfully")
+	err = json.NewEncoder(w).Encode(userInfo)
+	if err != nil {
+		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+		return
+	}
 	fmt.Println(userInfo)
 }
