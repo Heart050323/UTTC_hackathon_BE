@@ -2,11 +2,11 @@ package model
 
 import "time"
 
-type UserAuth struct {
+type EmailRequest struct {
 	Email string `json:"email"`
 }
 
-type UserInfo struct {
+type WholeData struct {
 	User_id    int         `json:"user_id"`
 	User_Name  string      `json:"user_name"`
 	TweetDatas []TweetData `json:"tweet_datas"`

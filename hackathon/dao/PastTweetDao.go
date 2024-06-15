@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func Auth(email string) (*model.UserInfo, error) {
+func PastTweet(email string) (*model.WholeData, error) {
 	rows, err := db.Query("SELECT u.user_id, u.user_name, t.tweet_id, t.content, t.replied_tweet_id, t.re_tweet_id, t.created_at FROM user u JOIN tweet t ON u.user_id = t.sender_user_id WHERE u.email = ?", email)
 	if err != nil {
 		log.Println("DBクエリが叩けてません")
@@ -14,13 +14,13 @@ func Auth(email string) (*model.UserInfo, error) {
 	}
 	defer rows.Close()
 
-	var userInfo model.UserInfo
+	var wholedata model.WholeData
 	tweetDatas := make([]model.TweetData, 0)
 
 	for rows.Next() {
 		var tweetData model.TweetData
 		var created_at string
-		err := rows.Scan(&userInfo.User_id, &userInfo.User_Name, &tweetData.Tweet_id, &tweetData.Content, &tweetData.RepliedTweetID, &tweetData.ReTweetID, &created_at)
+		err := rows.Scan(&wholedata.User_id, &wholedata.User_Name, &tweetData.Tweet_id, &tweetData.Content, &tweetData.RepliedTweetID, &tweetData.ReTweetID, &created_at)
 		if err != nil {
 			log.Println(rows, err)
 			log.Fatal("Scan failed")
@@ -35,6 +35,6 @@ func Auth(email string) (*model.UserInfo, error) {
 		tweetDatas = append(tweetDatas, tweetData)
 	}
 
-	userInfo.TweetDatas = tweetDatas
-	return &userInfo, nil
+	wholedata.TweetDatas = tweetDatas
+	return &wholedata, nil
 }
