@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"hackathon/controller"
 	"hackathon/dao"
 	"log"
@@ -16,7 +17,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		return
 	}
-
+	fmt.Printf("URL:%s,METHOD:%s\n", r.URL.Path, r.Method)
 	switch r.URL.Path {
 	case "/post":
 		switch r.Method {
@@ -29,6 +30,20 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodPost:
 			controller.HandlePastTweet(w, r)
+		default:
+			http.Error(w, "許可されていないメソッド", http.StatusMethodNotAllowed)
+		}
+	case "/tweetlist":
+		switch r.Method {
+		case http.MethodPost:
+			controller.HandleTweetList(w, r)
+		default:
+			http.Error(w, "許可されていないメソッド", http.StatusMethodNotAllowed)
+		}
+	case "/replytweet":
+		switch r.Method {
+		case http.MethodPost:
+			controller.HandleReplyTweetlist(w, r)
 		default:
 			http.Error(w, "許可されていないメソッド", http.StatusMethodNotAllowed)
 		}
