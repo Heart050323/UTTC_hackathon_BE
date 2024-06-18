@@ -2,8 +2,10 @@ package controller
 
 import (
 	"encoding/json"
+	"fmt"
 	"hackathon/model"
 	"hackathon/usecase"
+	"log"
 	"net/http"
 )
 
@@ -21,4 +23,27 @@ func HandleValuation(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("VAluation successfully"))
+}
+
+func ConfirmValuationType(w http.ResponseWriter, r *http.Request) {
+	var ValuationTypeRequest model.ValuationTypeRequest
+	err := json.NewDecoder(r.Body).Decode(&ValuationTypeRequest)
+	if err != nil {
+		http.Error(w, "Invalid request body in ValuationTypeRequest", http.StatusBadRequest)
+		return
+	}
+	valuationType, err := usecase.GetValuationType(ValuationTypeRequest.TweetID, ValuationTypeRequest.SenderUserID)
+	if err != nil {
+		http.Error(w, "failed to ValuationTypeRequest", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	log.Println("ValuationTypeRequest successfully")
+	err = json.NewEncoder(w).Encode(valuationType)
+	if err != nil {
+		http.Error(w, "Failed to encode response valuationType", http.StatusInternalServerError)
+		return
+	}
+	fmt.Println(valuationType)
 }

@@ -1,6 +1,9 @@
 package dao
 
-import "log"
+import (
+	"hackathon/model"
+	"log"
+)
 
 func Valuation(tweet_id int, sender_user_id int, valuation_type int) error {
 	tx, err := db.Begin()
@@ -28,4 +31,23 @@ func Valuation(tweet_id int, sender_user_id int, valuation_type int) error {
 		return err
 	}
 	return nil
+}
+
+func GetValuationType(tweet_id int, sender_user_id int) (model.ValuationTypeResponse, error) {
+	rows, err := db.Query("SELECT valuation_type FROM valuation WHERE tweet_id = ? AND sender_user_id = ?", tweet_id, sender_user_id)
+	if err != nil {
+		log.Println("valuationのDBクエリが叩けてません")
+		return model.ValuationTypeResponse{}, err
+	}
+	defer rows.Close()
+	var ValuationType model.ValuationTypeResponse
+	for rows.Next() {
+		err := rows.Scan(&ValuationType.ValuationType)
+		if err != nil {
+			log.Println(rows, err)
+			log.Fatal("Scan failed")
+			return model.ValuationTypeResponse{}, err
+		}
+	}
+	return ValuationType, nil
 }
