@@ -49,26 +49,3 @@ func HandleReplyTweetlist(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println(replyTweetList)
 }
-
-func HandlePastTweet(w http.ResponseWriter, r *http.Request) {
-	var EmailRequest model.EmailRequest
-	err := json.NewDecoder(r.Body).Decode(&EmailRequest)
-	if err != nil {
-		http.Error(w, "Invalid request body in EmailRequest", http.StatusBadRequest)
-		return
-	}
-	wholeData, err := usecase.PastTweet(EmailRequest.Email)
-	if err != nil {
-		http.Error(w, "failed to EmailRequest", http.StatusInternalServerError)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	log.Println("EmailRequest successfully")
-	err = json.NewEncoder(w).Encode(wholeData)
-	if err != nil {
-		http.Error(w, "Failed to encode response Pasttweet", http.StatusInternalServerError)
-		return
-	}
-	fmt.Println(wholeData)
-}

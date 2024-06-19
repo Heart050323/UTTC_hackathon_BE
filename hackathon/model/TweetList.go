@@ -9,12 +9,6 @@ type ReplyRequest struct {
 	RepliedTweetID int `json:"replied_tweet_id"`
 }
 
-type WholeData struct {
-	User_id    int         `json:"user_id"`
-	User_Name  string      `json:"user_name"`
-	TweetDatas []TweetData `json:"tweet_datas"`
-}
-
 type TweetData struct {
 	SenderUserID   int       `json:"user_id"`
 	SenderUserName string    `json:"user_name"`
@@ -24,4 +18,5 @@ type TweetData struct {
 	ReTweetID      int       `json:"re_tweet_id"`
 	CreatedAt      time.Time `json:"created_at"`
 	LikeCount      int       `json:"likecount"`
+	BadCount       int       `json:"badcount"`
 }

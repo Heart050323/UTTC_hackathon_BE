@@ -24,10 +24,10 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		default:
 			http.Error(w, "許可されていないメソッド", http.StatusMethodNotAllowed)
 		}
-	case "/pasttweet":
+	case "/userinfo":
 		switch r.Method {
 		case http.MethodPost:
-			controller.HandlePastTweet(w, r)
+			controller.HandleUserInfo(w, r)
 		default:
 			http.Error(w, "許可されていないメソッド", http.StatusMethodNotAllowed)
 		}

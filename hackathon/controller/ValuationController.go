@@ -45,5 +45,5 @@ func ConfirmValuationType(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to encode response valuationType", http.StatusInternalServerError)
 		return
 	}
-	fmt.Println(valuationType)
+	fmt.Println("valuationTypeの呼び出しに成功")
 }

@@ -23,12 +23,3 @@ func ReplyTweetList(replied_tweet_id int) ([]model.TweetData, error) {
 	}
 	return repliedTweetList, nil
 }
-
-func PastTweet(email string) (*model.WholeData, error) {
-	wholeData, err := dao.PastTweet(email)
-	if err != nil {
-		log.Println("failed to wholedata call in usecase")
-		return nil, err
-	}
-	return wholeData, nil
-}
