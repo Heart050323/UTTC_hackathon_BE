@@ -49,3 +49,26 @@ func HandleReplyTweetlist(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println(replyTweetList)
 }
+
+func HandleTweetCall(w http.ResponseWriter, r *http.Request) {
+	var TweetRequest model.TweetRequest
+	err := json.NewDecoder(r.Body).Decode(&TweetRequest)
+	if err != nil {
+		http.Error(w, "Invalid request body in TweetRequest", http.StatusBadRequest)
+		return
+	}
+	TweetData, err := usecase.TweetCall(TweetRequest.TweetID)
+	if err != nil {
+		http.Error(w, "failed to TweetRequest", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	log.Println("TweetRequest successfully")
+	err = json.NewEncoder(w).Encode(TweetData)
+	if err != nil {
+		http.Error(w, "Failed to encode response tweet", http.StatusInternalServerError)
+		return
+	}
+	fmt.Println(TweetData)
+}

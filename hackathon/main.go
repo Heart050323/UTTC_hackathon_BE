@@ -38,6 +38,13 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		default:
 			http.Error(w, "許可されていないメソッド", http.StatusMethodNotAllowed)
 		}
+	case "/tweetcall":
+		switch r.Method {
+		case http.MethodPost:
+			controller.HandleTweetCall(w, r)
+		default:
+			http.Error(w, "許可されていないメソッド", http.StatusMethodNotAllowed)
+		}
 	case "/replytweet":
 		switch r.Method {
 		case http.MethodPost:

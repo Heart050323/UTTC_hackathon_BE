@@ -19,11 +19,23 @@ func Valuation(tweet_id int, sender_user_id int, valuation_type int) error {
 		log.Println("failed to insert Valuation")
 		return err
 	}
-	_, err = tx.Exec("UPDATE tweet SET likecount = likecount + ? WHERE tweet_id = ?;", valuation_type, tweet_id)
-	if err != nil {
-		tx.Rollback()
-		log.Println("failed to set likecount")
-		return err
+	if valuation_type == 1 || valuation_type == -1 {
+		_, err = tx.Exec("UPDATE tweet SET likecount = likecount + ? WHERE tweet_id = ?;", valuation_type, tweet_id)
+		log.Println("goodcountをいじりました")
+		if err != nil {
+			tx.Rollback()
+			log.Println("failed to set likecount")
+			return err
+		}
+	}
+	if valuation_type == 2 || valuation_type == -2 {
+		_, err = tx.Exec("UPDATE tweet SET badcount = badcount + ? WHERE tweet_id = ?;", valuation_type/2, tweet_id)
+		log.Println("badcountをいじりました")
+		if err != nil {
+			tx.Rollback()
+			log.Println("failed to set badcount")
+			return err
+		}
 	}
 	err = tx.Commit()
 	if err != nil {

@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"fmt"
 	"hackathon/model"
 	"log"
 	"time"
@@ -8,7 +9,7 @@ import (
 
 func TweetList() ([]model.TweetData, error) {
 	rows, err := db.Query(`SELECT 
-	tweet.tweet_id, tweet.content, tweet.replied_tweet_id, tweet.re_tweet_id, tweet.created_at, tweet.likecount, tweet.badcount,
+	tweet.tweet_id, tweet.content, tweet.replied_tweet_id, tweet.re_tweet_id, tweet.created_at, tweet.likecount, tweet.badcount, tweet.replycount, tweet.re_tweetcount,
 	user.user_name, user.user_id
 	FROM tweet
 	JOIN user ON tweet.sender_user_id = user.user_id
@@ -25,7 +26,7 @@ func TweetList() ([]model.TweetData, error) {
 	for rows.Next() {
 		var tweetData model.TweetData
 		var created_at string
-		err := rows.Scan(&tweetData.TweetID, &tweetData.Content, &tweetData.RepliedTweetID, &tweetData.ReTweetID, &created_at, &tweetData.LikeCount, &tweetData.BadCount, &tweetData.SenderUserName, &tweetData.SenderUserID)
+		err := rows.Scan(&tweetData.TweetID, &tweetData.Content, &tweetData.RepliedTweetID, &tweetData.ReTweetID, &created_at, &tweetData.LikeCount, &tweetData.BadCount, &tweetData.ReplyCount, &tweetData.ReTweetCount, &tweetData.SenderUserName, &tweetData.SenderUserID)
 		if err != nil {
 			log.Println(rows, err)
 			log.Fatal("Scan failed")
@@ -44,7 +45,7 @@ func TweetList() ([]model.TweetData, error) {
 
 func ReplyTweetList(replied_tweet_id int) ([]model.TweetData, error) {
 	rows, err := db.Query(`SELECT 
-	tweet.tweet_id, tweet.content, tweet.replied_tweet_id, tweet.re_tweet_id, tweet.created_at, tweet.likecount, tweet.badcount,
+	tweet.tweet_id, tweet.content, tweet.replied_tweet_id, tweet.re_tweet_id, tweet.created_at, tweet.likecount, tweet.badcount, tweet.replycount, tweet.re_tweetcount,
 	user.user_name, user.user_id
 	FROM tweet
 	JOIN user ON tweet.sender_user_id = user.user_id
@@ -61,7 +62,7 @@ func ReplyTweetList(replied_tweet_id int) ([]model.TweetData, error) {
 	for rows.Next() {
 		var tweetData model.TweetData
 		var created_at string
-		err := rows.Scan(&tweetData.TweetID, &tweetData.Content, &tweetData.RepliedTweetID, &tweetData.ReTweetID, &created_at, &tweetData.LikeCount, &tweetData.BadCount, &tweetData.SenderUserName, &tweetData.SenderUserID)
+		err := rows.Scan(&tweetData.TweetID, &tweetData.Content, &tweetData.RepliedTweetID, &tweetData.ReTweetID, &created_at, &tweetData.LikeCount, &tweetData.BadCount, &tweetData.ReplyCount, &tweetData.ReTweetCount, &tweetData.SenderUserName, &tweetData.SenderUserID)
 		if err != nil {
 			log.Println(rows, err)
 			log.Fatal("Scan failed")
@@ -77,4 +78,42 @@ func ReplyTweetList(replied_tweet_id int) ([]model.TweetData, error) {
 	}
 
 	return tweetDatas, nil
+}
+
+func TweetCall(tweet_id int) (model.TweetData, error) {
+	rows, err := db.Query(`SELECT 
+        tweet.tweet_id, tweet.content, tweet.replied_tweet_id, tweet.re_tweet_id, tweet.created_at, tweet.likecount, tweet.badcount, tweet.replycount, tweet.re_tweetcount,
+        user.user_name, user.user_id
+        FROM tweet
+        JOIN user ON tweet.sender_user_id = user.user_id
+        WHERE tweet.tweet_id = ?`, tweet_id)
+	if err != nil {
+		log.Println("Tweet Call DBクエリが叩けてません:", err)
+		return model.TweetData{}, err
+	}
+	defer rows.Close()
+
+	var tweetData model.TweetData
+	if rows.Next() {
+		var createdAt string
+		err := rows.Scan(&tweetData.TweetID, &tweetData.Content, &tweetData.RepliedTweetID, &tweetData.ReTweetID, &createdAt, &tweetData.LikeCount, &tweetData.BadCount, &tweetData.ReplyCount, &tweetData.ReTweetCount, &tweetData.SenderUserName, &tweetData.SenderUserID)
+		if err != nil {
+			log.Println("Scan failed:", err)
+			return model.TweetData{}, err
+		}
+		tweetData.CreatedAt, err = time.Parse("2006-01-02 15:04:05", createdAt)
+		if err != nil {
+			log.Println("Failed to parse created_at:", err)
+			return model.TweetData{}, err
+		}
+	} else {
+		log.Println("No tweet found with tweet_id:", tweet_id)
+		return model.TweetData{}, fmt.Errorf("no tweet found with tweet_id: %d", tweet_id)
+	}
+
+	if rows.Next() {
+		log.Println("Warning: multiple tweets found with the same tweet_id:", tweet_id)
+	}
+
+	return tweetData, nil
 }

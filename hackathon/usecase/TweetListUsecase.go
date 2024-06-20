@@ -23,3 +23,12 @@ func ReplyTweetList(replied_tweet_id int) ([]model.TweetData, error) {
 	}
 	return repliedTweetList, nil
 }
+
+func TweetCall(tweet_id int) (model.TweetData, error) {
+	TweetData, err := dao.TweetCall(tweet_id)
+	if err != nil {
+		log.Println("failed to tweetdata call in usecase")
+		return model.TweetData{}, err
+	}
+	return TweetData, nil
+}
