@@ -59,6 +59,13 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		default:
 			http.Error(w, "許可されていないメソッド", http.StatusMethodNotAllowed)
 		}
+	case "/confirmretweet":
+		switch r.Method {
+		case http.MethodPost:
+			controller.HandleRetweetOn(w, r)
+		default:
+			http.Error(w, "許可されていないメソッド", http.StatusMethodNotAllowed)
+		}
 	case "/confirmValuationType":
 		switch r.Method {
 		case http.MethodPost:

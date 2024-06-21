@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"hackathon/model"
 	"log"
 )
 
@@ -31,6 +32,12 @@ func PostTweet(sender_user_id int, content string, replied_tweet_id int, re_twee
 			log.Println("Failed to update retweetcount")
 			return err
 		}
+		_, err = tx.Exec("INSERT INTO retweeton (sender_user_id, tweet_id, re_tweet_on) VALUES (?,?,1)", sender_user_id, re_tweet_id)
+		if err != nil {
+			tx.Rollback()
+			log.Println("Failed to retweetOn")
+			return err
+		}
 	}
 
 	err = tx.Commit()
@@ -39,4 +46,23 @@ func PostTweet(sender_user_id int, content string, replied_tweet_id int, re_twee
 		return err
 	}
 	return nil
+}
+
+func GetRetweetOn(tweet_id int, sender_user_id int) (model.RetweetOnResponse, error) {
+	rows, err := db.Query(`SELECT re_tweet_on FROM retweeton WHERE tweet_id = ? AND sender_user_id = ? `, tweet_id, sender_user_id)
+	if err != nil {
+		log.Println("RetweerOn DBクエリが叩けてません:", err)
+		return model.RetweetOnResponse{}, err
+	}
+	defer rows.Close()
+
+	var RetweetOnResponse model.RetweetOnResponse
+	if rows.Next() {
+		err := rows.Scan(&RetweetOnResponse.RetweetOn)
+		if err != nil {
+			log.Println("Scan failed:", err)
+			return model.RetweetOnResponse{}, err
+		}
+	}
+	return RetweetOnResponse, nil
 }
