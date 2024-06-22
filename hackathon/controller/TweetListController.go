@@ -72,3 +72,69 @@ func HandleTweetCall(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println(TweetData)
 }
+
+func HandlePastTweetList(w http.ResponseWriter, r *http.Request) {
+	var UserIDRequest model.UserIDRequest
+	err := json.NewDecoder(r.Body).Decode(&UserIDRequest)
+	if err != nil {
+		http.Error(w, "Invalid request body in UserIDRequest", http.StatusBadRequest)
+		return
+	}
+	tweetList, err := usecase.PastTweetList(UserIDRequest.User_id)
+	if err != nil {
+		http.Error(w, "failed to TweetList", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	log.Println("tweetListCall successfully")
+	err = json.NewEncoder(w).Encode(tweetList)
+	if err != nil {
+		http.Error(w, "Failed to encode response tweetlist", http.StatusInternalServerError)
+		return
+	}
+}
+
+func HandleLikeTweetList(w http.ResponseWriter, r *http.Request) {
+	var UserIDRequest model.UserIDRequest
+	err := json.NewDecoder(r.Body).Decode(&UserIDRequest)
+	if err != nil {
+		http.Error(w, "Invalid request body in UserIDRequest", http.StatusBadRequest)
+		return
+	}
+	tweetList, err := usecase.LikeTweetList(UserIDRequest.User_id)
+	if err != nil {
+		http.Error(w, "failed to TweetList", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	log.Println("tweetListCall successfully")
+	err = json.NewEncoder(w).Encode(tweetList)
+	if err != nil {
+		http.Error(w, "Failed to encode response tweetlist", http.StatusInternalServerError)
+		return
+	}
+}
+
+func HandleBadTweetList(w http.ResponseWriter, r *http.Request) {
+	var UserIDRequest model.UserIDRequest
+	err := json.NewDecoder(r.Body).Decode(&UserIDRequest)
+	if err != nil {
+		http.Error(w, "Invalid request body in UserIDRequest", http.StatusBadRequest)
+		return
+	}
+	tweetList, err := usecase.BadTweetList(UserIDRequest.User_id)
+	if err != nil {
+		http.Error(w, "failed to TweetList", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	log.Println("tweetListCall successfully")
+	err = json.NewEncoder(w).Encode(tweetList)
+	if err != nil {
+		http.Error(w, "Failed to encode response tweetlist", http.StatusInternalServerError)
+		return
+	}
+}

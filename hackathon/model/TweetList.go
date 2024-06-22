@@ -5,6 +5,11 @@ import "time"
 type EmailRequest struct {
 	Email string `json:"email"`
 }
+
+type UserIDRequest struct {
+	User_id int `json:"user_id"`
+}
+
 type ReplyRequest struct {
 	RepliedTweetID int `json:"replied_tweet_id"`
 }

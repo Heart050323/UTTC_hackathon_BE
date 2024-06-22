@@ -31,10 +31,48 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		default:
 			http.Error(w, "許可されていないメソッド", http.StatusMethodNotAllowed)
 		}
+	case "/userprofile":
+		switch r.Method {
+		case http.MethodPost:
+			controller.HandleUserProfile(w, r)
+		default:
+			http.Error(w, "許可されていないメソッド", http.StatusMethodNotAllowed)
+		}
+	case "/userprofilemodify":
+		switch r.Method {
+		case http.MethodPost:
+			controller.HandleUserProfileModify(w, r)
+		default:
+			http.Error(w, "許可されていないメソッド", http.StatusMethodNotAllowed)
+		}
+
 	case "/tweetlist":
 		switch r.Method {
 		case http.MethodPost:
 			controller.HandleTweetList(w, r)
+		default:
+			http.Error(w, "許可されていないメソッド", http.StatusMethodNotAllowed)
+		}
+
+	case "/pasttweetlist":
+		switch r.Method {
+		case http.MethodPost:
+			controller.HandlePastTweetList(w, r)
+		default:
+			http.Error(w, "許可されていないメソッド", http.StatusMethodNotAllowed)
+		}
+	case "/liketweetlist":
+		switch r.Method {
+		case http.MethodPost:
+			controller.HandleLikeTweetList(w, r)
+		default:
+			http.Error(w, "許可されていないメソッド", http.StatusMethodNotAllowed)
+		}
+
+	case "/badtweetlist":
+		switch r.Method {
+		case http.MethodPost:
+			controller.HandleBadTweetList(w, r)
 		default:
 			http.Error(w, "許可されていないメソッド", http.StatusMethodNotAllowed)
 		}
