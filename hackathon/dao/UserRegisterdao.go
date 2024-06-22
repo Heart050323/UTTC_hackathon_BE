@@ -8,6 +8,7 @@ func UserRegister(email string, user_name string) error {
 		log.Println("Failed to begin transaction")
 		return err
 	}
+	//commit用
 	_, err = tx.Exec("INSERT INTO user (email, user_name) VALUES(?,?)", email, user_name)
 	if err != nil {
 		tx.Rollback()
