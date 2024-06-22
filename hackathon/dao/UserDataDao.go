@@ -6,7 +6,7 @@ import (
 )
 
 func GetUserInfo(email string) (model.UserData, error) {
-	rows, err := db.Query("SELECT user_id, user_name FROM users WHERE email = ?", email)
+	rows, err := db.Query("SELECT user_id, user_name FROM user WHERE email = ?", email)
 	if err != nil {
 		log.Println("DBクエリが叩けてません")
 		return model.UserData{}, err
