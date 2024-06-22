@@ -10,9 +10,9 @@ import (
 func TweetList() ([]model.TweetData, error) {
 	rows, err := db.Query(`SELECT 
 	tweet.tweet_id, tweet.content, tweet.replied_tweet_id, tweet.re_tweet_id, tweet.created_at, tweet.likecount, tweet.badcount, tweet.replycount, tweet.re_tweetcount,
-	user.user_name, user.user_id
+	users.user_name, users.user_id
 	FROM tweet
-	JOIN user ON tweet.sender_user_id = user.user_id
+	JOIN users ON tweet.sender_user_id = users.user_id
 	WHERE tweet.replied_tweet_id = 0
 	ORDER BY tweet.created_at DESC`)
 	if err != nil {
@@ -46,9 +46,9 @@ func TweetList() ([]model.TweetData, error) {
 func ReplyTweetList(replied_tweet_id int) ([]model.TweetData, error) {
 	rows, err := db.Query(`SELECT 
 	tweet.tweet_id, tweet.content, tweet.replied_tweet_id, tweet.re_tweet_id, tweet.created_at, tweet.likecount, tweet.badcount, tweet.replycount, tweet.re_tweetcount,
-	user.user_name, user.user_id
+	users.user_name, users.user_id
 	FROM tweet
-	JOIN user ON tweet.sender_user_id = user.user_id
+	JOIN users ON tweet.sender_user_id = users.user_id
 	WHERE tweet.replied_tweet_id = ?
 	ORDER BY tweet.created_at DESC`, replied_tweet_id)
 	if err != nil {
@@ -83,9 +83,9 @@ func ReplyTweetList(replied_tweet_id int) ([]model.TweetData, error) {
 func TweetCall(tweet_id int) (model.TweetData, error) {
 	rows, err := db.Query(`SELECT 
         tweet.tweet_id, tweet.content, tweet.replied_tweet_id, tweet.re_tweet_id, tweet.created_at, tweet.likecount, tweet.badcount, tweet.replycount, tweet.re_tweetcount,
-        user.user_name, user.user_id
+        users.user_name, users.user_id
         FROM tweet
-        JOIN user ON tweet.sender_user_id = user.user_id
+        JOIN users ON tweet.sender_user_id = users.user_id
         WHERE tweet.tweet_id = ?`, tweet_id)
 	if err != nil {
 		log.Println("Tweet Call DBクエリが叩けてません:", err)
